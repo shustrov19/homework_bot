@@ -28,7 +28,7 @@ logging.basicConfig(
 PRACTICUM_TOKEN = os.getenv('PRACTICUM_TOKEN')
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
-RETRY_PERIOD = 600
+RETRY_PERIOD = 10
 ENDPOINT = 'https://practicum.yandex.ru/api/user_api/homework_statuses/'
 HEADERS = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
 HOMEWORK_VERDICTS = {
@@ -147,17 +147,19 @@ def main():
             response = get_api_answer(timestamp)
             homeworks = check_response(response)
             if len(homeworks) == 0:
-                logging.debug('Статус проверки домашней работы не изменился')
-                time.sleep(RETRY_PERIOD)
+                logging.debug('Домашнюю работу ещё не начали проверять.')
                 continue
             timestamp = response['current_date']
             new_message = parse_status(homeworks[0])
-        except Exception as error:
-            new_message = f'Сбой в работе программы: {error}'
-        finally:
             if old_message != new_message:
                 old_message = new_message
                 send_message(bot, new_message)
+        except Exception as error:
+            new_message = f'Сбой в работе программы: {error}'
+            if old_message != new_message:
+                old_message = new_message
+                send_message(bot, new_message)
+        finally:
             time.sleep(RETRY_PERIOD)
 
 
