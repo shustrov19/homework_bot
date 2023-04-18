@@ -81,7 +81,7 @@ def get_api_answer(timestamp):
     except requests.RequestException as error:
         message = (f'Ошибка соединения с сервером: {error}')
         logging.error(message)
-        raise requests.RequestException(message)
+        raise ConnectionError(message)
     try:
         response_json = response.json()
     except json.JSONDecodeError as error:
