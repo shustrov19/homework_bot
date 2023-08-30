@@ -24,5 +24,5 @@
 [Виктор Шустров](https://github.com/shustrov19)
 
 ### Контакты
-Email: shustrov19@gmail.com
-Telegram: @Shustrov19
+- Email: shustrov19@gmail.com
+- Telegram: @Shustrov19
